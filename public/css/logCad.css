@@ -1,0 +1,153 @@
+@font-face {
+    font-family: titulos;
+    src: url(../fonts/Chromate-Regular.otf);
+}
+
+
+:root{
+   --gradient: linear-gradient(
+    to right, #a32927f4, #0e2486  
+ 
+   ); 
+   --gradientH2: linear-gradient(
+    to right, #776067, #000000  
+   )
+}
+
+.page-login-left-cad {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    min-height: 550px;
+    background-color: #a32927;
+}
+
+.page-login-right-cad {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    min-height: 550px;
+    background-color: #ffffff;
+}
+
+
+
+.page-login-left{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    height: 36rem;
+    background-color: #a32927;   
+}
+
+.image{
+    margin-top: 40px;
+    margin-right: 3%;
+    width: 34vw;
+    height: 450px;
+}
+
+.page-login-right{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    height: 36rem;
+  
+    background-color: #ffffff;   
+   }
+
+
+   .container {
+    box-shadow: -5px 10px 25px rgb(10, 10, 10);
+    border-radius: 10px;
+}
+
+.btn{
+    margin-top: 0,5%;
+    width: 90%;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    margin-bottom: -6px;
+}
+.btn:hover{
+    margin-top: 1%;
+    width: 95%;
+    background-color: #a32927;
+    color: #ffffff;
+}
+.col-4{
+background-color: #a32927;
+}
+.row{
+    margin-top: 12px;
+}
+#imageUsu01{
+    margin-top: 30px;
+}
+
+
+p{
+    color:#000000;
+    margin-top: 10%;
+}
+h2{
+    margin-top: 40%;
+    background-image: var(--gradientH2);
+    background-clip:  text;
+    -webkit-background-clip: text;
+
+    font-family: 'Noto Sans Symbols 2', sans-serif;
+    color: transparent;
+}
+h1{
+    margin-top: 5%;
+    background-image: var(--gradient);
+    background-clip:  text;
+    -webkit-background-clip: text;
+
+    font-family: 'Noto Sans Symbols 2', sans-serif;
+    color: transparent;
+}
+#titleLog{
+    margin-top: 50px;
+    margin-left: 40%;
+    font-size: 3vw;
+    background-image: var(--gradient);
+    background-clip:  text;
+    -webkit-background-clip: text;
+
+    font-family: 'Noto Sans Symbols 2', sans-serif;
+    color: transparent;
+}
+
+
+#titleCad{
+    margin-top: 10%;
+    font-size: 3vw;
+    background-image: var(--gradient);
+    background-clip:  text;
+    -webkit-background-clip: text;
+
+    font-family: 'Noto Sans Symbols 2', sans-serif;
+    color: transparent;
+}
+#titleCad01{
+    margin-top: 3%;
+    font-size: 2vw;
+    background-image: var(--gradient);
+    background-clip:  text;
+    -webkit-background-clip: text;
+
+    font-family: 'Noto Sans Symbols 2', sans-serif;
+    color: transparent;
+}
+
+svg, span{
+    color: #a32927;
+}
+a{
+    text-decoration: none;
+    color: #000000;
+}
+a:hover{
+    text-decoration: none;
+    color: #ffffff;
+}
+
