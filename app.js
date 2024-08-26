@@ -11,16 +11,20 @@ app.get('/', (req, res) => {
     res.render('main.ejs');
 });
 
-app.get('/login', (req, res) => {
-    res.render('login.ejs');
+app.get('/inicio', (req, res) => {
+    const query = "SELECT * FROM tb_faixa";
+    con.query(query, (err, result) => {
+        if (err) throw err;
+        res.render('inicio.ejs', { faixas: result });
+    });
 });
 
-app.get('/cadastro', (req, res) => {
-    res.render('cadastro.ejs');
+app.get('/inicio', (req, res) => {
+    res.render('inicio.ejs');
 });
 
-app.listen(3000, function () {
-    console.log("Servidor Escutando na porta 3000");
+app.get('/menu', (req, res) => {
+    res.render('menu.ejs');
 });
 
 const con = mysql.createConnection({
@@ -30,10 +34,11 @@ const con = mysql.createConnection({
     database: "projeto_judo"
 });
 
-
-
-
 con.connect(function (err) {
     if (err) throw err;
     console.log("Conectado!");
+});
+
+app.listen(3000, function () {
+    console.log("Servidor Escutando na porta 3000");
 });

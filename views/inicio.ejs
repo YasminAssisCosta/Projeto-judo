@@ -3,10 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Lista de Faixas</title>
+    <style>
+        .card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            width: 150px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Lista de faixas </h1>
-    
+    <h1>Lista de Faixas</h1>
+    <div>
+        <% faixas.forEach(faixa => { %>
+            <div class="card">
+                <p><%= faixa.cor %></p>
+            </div>
+        <% }); %>
+    </div>
 </body>
 </html>
