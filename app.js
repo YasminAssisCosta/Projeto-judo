@@ -23,21 +23,31 @@ app.get('/inicio', (req, res) => {
     res.render('inicio.ejs');
 });
 
+app.get('/cadastro', (req, res) => {
+    res.render('cadastro.ejs');
+});
+
 app.get('/menu', (req, res) => {
     res.render('menu.ejs');
 });
 
-const con = mysql.createConnection({
+app.get('/login', (req, res) => {
+    res.render('login.ejs');
+});
+
+/*const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
     database: "projeto_judo"
 });
 
+
 con.connect(function (err) {
     if (err) throw err;
     console.log("Conectado!");
 });
+*/
 
 app.listen(3000, function () {
     console.log("Servidor Escutando na porta 3000");
