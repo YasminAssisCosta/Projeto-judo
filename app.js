@@ -41,12 +41,19 @@ app.use(session({
 }));
 
 app.get('/inicio', (req, res) => {
-    const query = "SELECT * FROM tb_faixa";
-    con.query(query, (err, result) => {
-        if (err) throw err;
-        res.render('inicio.ejs', { faixas: result });
-    });
+    if (req.session.logado) {
+        const query = "SELECT * FROM tb_faixa";
+        con.query(query, (err, result) => {
+            if (err) throw err;
+            // Renderiza a página 'inicio.ejs' passando os dados das faixas
+            res.render('inicio.ejs', { faixas: result, id_usuario: req.session.id_usuario });
+        });
+    } else {
+        // Se o usuário não estiver logado, redireciona para a página de login
+        res.render('login.ejs', { mensagem: "Realize login ou cadastre-se para ter acesso a essa página" });
+    }
 });
+
 
 app.get('/inicio', (req, res) => {
     res.render('inicio.ejs');
@@ -60,14 +67,7 @@ app.get('/login', (req, res) => {
     res.render('login.ejs');
 });
 
-app.get('/home', function (req, res) {
-    if (req.session.logado) {
-        res.render('home.ejs', { id_usuario: req.session.id_usuario });
-    }
-    else {
-        res.render('login.ejs', { mensagem: "Realize login ou cadastre-se para ter acesso a essa página" })
-    }
-});
+
 
 app.post('/login', function (req, res) {
     var senha = req.body['senha']
@@ -83,7 +83,7 @@ app.post('/login', function (req, res) {
                     req.session.username = result[0]['nome'];
                     req.session.id_usuario = result[0]['id_usuario'];
                     req.session.email = result[0]['email'];
-                    res.redirect('/home');
+                    res.redirect('/inicio');
                 }
                 else { res.render('login', { mensagem: "Senha inválida" }) }
             });
