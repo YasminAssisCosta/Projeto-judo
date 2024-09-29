@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const formidable = require('formidable');
-const flash = require('express-flash-messages');
+
 
 module.exports = app;
 var session = require('express-session');
@@ -27,7 +27,7 @@ con.connect(function (err) {
 
 app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
-app.use(flash());
+
 
 app.get('/', (req, res) => {
     res.render('main.ejs');
