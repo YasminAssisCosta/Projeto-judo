@@ -126,6 +126,42 @@ app.post('/cadastro', function (req, res) {
     });
 });
 
+app.get('/conteudo', (req, res) => {
+    const faixaId = req.query.faixa;  // Obtém o id_faixa da query string
+
+    if (!faixaId) {
+        return res.status(400).send('Faixa não especificada.');
+    }
+
+    // Consulta para buscar os conteúdos relacionados à faixa selecionada
+    const query = "SELECT * FROM tb_conteudo WHERE id_faixa = ?";
+    
+    con.query(query, [faixaId], (err, result) => {
+        if (err) throw err;
+
+        // Renderiza a página 'conteudo.ejs' passando os conteúdos encontrados
+        res.render('conteudo.ejs', { conteudos: result });
+    });
+});
+
+app.get('/verMaterial', (req, res) => {
+    const id_conteudo = req.query.id_conteudo; // Captura o ID do conteúdo da query string
+
+    const query = "SELECT * FROM tb_conteudo WHERE id_conteudo = ?";
+    con.query(query, [id_conteudo], (err, result) => {
+        if (err) throw err;
+
+        if (result.length > 0) {
+            const conteudo = result[0];
+            res.render('verMaterial.ejs', { conteudo }); 
+        } else {
+            res.send('Conteúdo não encontrado.'); 
+        }
+    });
+});
+
+
+
 app.listen(3000, function () {
     console.log("Servidor Escutando na porta 3000");
 });

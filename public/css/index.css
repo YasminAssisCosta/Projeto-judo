@@ -1,0 +1,22 @@
+#dois, #um {
+    margin-top: 4px;
+    margin-left: 4px;
+    border-radius: 5px;
+  }
+  .card-title {
+    font-size: 20px;
+  }
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  }
+  li {
+    list-style-type: none;
+  }
+  h2, h1 {
+    color: #ffa710;
+  }
+  p {
+    color: #473619;
+  }
+    

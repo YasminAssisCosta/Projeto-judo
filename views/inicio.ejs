@@ -18,15 +18,18 @@
             <% faixas.forEach(faixa => { %>
                 <div class="col-3">
                     <div class="card" id="um">
-                        <img id="imagem" src="<%= faixa.imagem ? '../controller/Upload/' + faixa.imagem : '../public/imagens/placeholder.png' %>" 
-                            style="max-height: 300px; width: 78%; margin-top:10px; border-radius: 8px;">
+                        <img id="imagem" src="<%= faixa.imagem%>" 
+                            style="height: 300px; width: 78%; margin-top:10px; border-radius: 8px;">
                         <h2 class="card-title mt-3 mb-3 text-center" style="font-family: Sticky Sans; font-size:40px"><%= faixa.cor %></h2>
-                        <a href="/opcaoNivel?faixa=<%= faixa.id_faixa %>" class="btn btn" 
-                            style="background-color: #E49695;color:#ffffff; margin-bottom:10px;max-width: 95%; margin-left: 6px;">Entrar</a>
+                        <a href="/conteudo?faixa=<%= faixa.id_faixa %>" class="btn btn" 
+                            style="background-color: #a32927f4;color:#ffffff; margin-bottom:10px;max-width: 95%; margin-left: 6px;">Entrar</a>
                     </div>
                 </div>
+                <br>
             <% }) %>
+            
         </div>
+       
     </div>
 </body>
 
