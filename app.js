@@ -29,9 +29,6 @@ app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
 
 
-app.get('/', (req, res) => {
-    res.render('main.ejs');
-});
 
 // Sessão
 app.use(session({
@@ -39,6 +36,32 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+app.get('/', (req, res) => {
+    res.render('main.ejs');
+});
+
+app.get('/quizz', (req, res) => {
+    res.render('quizz.ejs');
+});
+
+app.get('/addConteudo', (req, res) => {
+    res.render('addConteudo.ejs');
+});
+
+app.post('/addConteudo', function (req, res) {
+    var id = req.session.id_usuario;
+    var descricao = req.body.meta;
+    var sql = "INSERT INTO tb_conteudo (titulo, conteudo, id_faixa, id_user, link_video, imagem, autor) VALUES ?"
+    var values = [
+        ['1', '1', '2', '2', '3', '4', 'josé']
+    ];
+    con.query(sql, [values], function (err, result) {
+        if (err) throw err;
+        console.log("Numero de registros inseridos: " + result.affectedRows);
+    });
+    res.redirect('/conteudo');
+});
 
 app.get('/inicio', (req, res) => {
     if (req.session.logado) {
