@@ -51,11 +51,15 @@ app.get('/addConteudo', (req, res) => {
 
 app.post('/addConteudo', function (req, res) {
     var id = req.session.id_usuario;
-    var descricao = req.body.meta;
+    var titulo = req.body['titulo'];
+    var conteudo = req.body['conteudo'];
+    var link = req.body['link'];
+
     var sql = "INSERT INTO tb_conteudo (titulo, conteudo, id_faixa, id_user, link_video, imagem, autor) VALUES ?"
     var values = [
-        ['1', '1', '2', '2', '3', '4', 'josé']
+        [titulo, conteudo, '2', '2', link, '4', 'josé']
     ];
+
     con.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("Numero de registros inseridos: " + result.affectedRows);
