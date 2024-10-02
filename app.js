@@ -34,6 +34,32 @@ app.get('/', (req, res) => {
     res.render('main.ejs');
 });
 
+app.get('/quizz', (req, res) => {
+    res.render('quizz.ejs');
+});
+
+app.get('/addConteudo', (req, res) => {
+    res.render('addConteudo.ejs');
+});
+
+app.post('/addConteudo', function (req, res) {
+    var id = req.session.id_usuario;
+    var titulo = req.body['titulo'];
+    var conteudo = req.body['conteudo'];
+    var link = req.body['link'];
+
+    var sql = "INSERT INTO tb_conteudo (titulo, conteudo, id_faixa, id_user, link_video, imagem, autor) VALUES ?"
+    var values = [
+        [titulo, conteudo, '2', '2', link, '4', 'josé']
+    ];
+
+    con.query(sql, [values], function (err, result) {
+        if (err) throw err;
+        console.log("Numero de registros inseridos: " + result.affectedRows);
+    });
+    res.redirect('/conteudo');
+});
+
 app.get('/inicio', (req, res) => {
     if (req.session.logado) {
         const query = "SELECT * FROM tb_faixa";
