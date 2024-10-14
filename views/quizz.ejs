@@ -15,8 +15,8 @@
     <h1 class="text-center">Perguntas Disponíveis</h1>
 
     <form method="POST" action="/responderQuizz">
-        <input type="hidden" name="id_usuario" value="<%= id_Usuario %>">
-        <input type="hidden" name="id_conteudo" value="<%= id_Conteudo %>">
+        <input type="hidden" name="id_usuario" value="<%= id_usuario %>">
+        <input type="hidden" name="id_conteudo" value="<%= id_conteudo %>">
       
         <% questoes.forEach((questao, i) => { %>
           <div class="row">

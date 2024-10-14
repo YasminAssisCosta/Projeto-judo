@@ -192,6 +192,9 @@ app.get('/conteudo', (req, res) => {
 app.get('/quizz', (req, res) => {
     if (req.session.logado) {
         const id_conteudo = req.query.id_conteudo;
+        const id_usuario = req.session.id_usuario;
+       
+
         if (!id_conteudo) {
             return res.status(400).send('Conteúdo não especificado.');
         }
@@ -199,7 +202,8 @@ app.get('/quizz', (req, res) => {
         con.query(query, [id_conteudo], (err, result) => {
             if (err) throw err;
             if (result.length > 0) {
-                res.render('quizz.ejs', { questoes: result, id_Conteudo: id_conteudo, id_Usuario: req.session.id_usuario });
+                res.render('quizz.ejs', { questoes: result, id_conteudo: id_conteudo, id_usuario: id_usuario });
+
             } else {
                 res.send('Nenhuma questão encontrada para este conteúdo.');
             }
