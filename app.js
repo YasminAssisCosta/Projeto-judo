@@ -189,65 +189,76 @@ app.get('/conteudo', (req, res) => {
     }
 });
 
-app.get('/quizz', (req, res) => {
-    if (req.session.logado) {
-        const id_conteudo = req.query.id_conteudo;
-        const id_usuario = req.session.id_usuario;
-       
 
-        if (!id_conteudo) {
-            return res.status(400).send('Conteúdo não especificado.');
-        }
-        const query = "SELECT * FROM tb_questao WHERE id_conteudo = ?";
-        con.query(query, [id_conteudo], (err, result) => {
-            if (err) throw err;
-            if (result.length > 0) {
-                res.render('quizz.ejs', { questoes: result, id_conteudo: id_conteudo, id_usuario: id_usuario });
 
-            } else {
-                res.send('Nenhuma questão encontrada para este conteúdo.');
-            }
-        });
-    } else {
-        res.render('login.ejs', { mensagem: "Realize login ou cadastre-se para ter acesso a essa página" });
+app.get('/quizzes', (req, res) => {
+    const id_conteudo = req.query.id_conteudo; 
+
+    if (!id_conteudo) {
+        return res.status(400).send('ID de conteúdo não especificado.');
     }
+
+    const query = "SELECT * FROM tb_questao WHERE id_conteudo = ?";
+    con.query(query, [id_conteudo], (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) {
+            res.render('quizzes', { quizzes: result });
+        } else {
+            res.send('Nenhum quiz encontrado para este conteúdo.');
+        }
+    });
+});
+ 
+
+app.get('/questoes', (req, res) => {
+    const id_questao = req.query.id_questao; 
+
+    if (!id_questao) {
+        return res.status(400).send('ID de questão não especificado.');
+    }
+
+    const query = "SELECT * FROM tb_questao WHERE id_questao = ?";
+    con.query(query, [id_questao], (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) {
+            // Acessar o primeiro item do array result
+            res.render('quizz.ejs', { quiz: result[0] });
+        } else {
+            res.send('Nenhum quiz encontrado para este conteúdo.');
+        }
+    });
 });
 
-app.post('/responderQuizz', (req, res) => {
-    if (req.session.logado) {
-        const id_usuario = req.body.id_usuario;
-        const id_conteudo = req.body.id_conteudo;
-        const questoes = req.body.questoes;
-        if (!questoes) {
-            req.session.erro = "Nenhuma questão foi enviada.";
-            return res.redirect(`/quizz?id_conteudo=${id_conteudo}`);
-        }
-        let arrayQuestoes;
-        try {
-            arrayQuestoes = questoes.split(",");
-        } catch (err) {
-            req.session.erro = "Erro ao processar as questões.";
-            return res.redirect(`/quizz?id_conteudo=${id_conteudo}`);
-        }
-        const queries = [];
-        arrayQuestoes.forEach(id_questao => {
-            const resposta = req.body[id_questao] || null;
-            queries.push([id_questao, resposta, id_usuario]);
-        });
-        const query = "INSERT INTO tb_questao_usuario (id_questaoU, resposta, id_usuario) VALUES ?";
-        con.query(query, [queries], (err, result) => {
-            if (err) {
-                req.session.erro = "Erro ao enviar as respostas.";
-                return res.redirect(`/quizz?id_conteudo=${id_conteudo}`);
-            }
-            req.session.sucesso = "Respostas enviadas com sucesso.";
-            res.redirect(`/inicio`);
-        });
-    } else {
-        req.session.erro = "Você precisa estar logado para responder o quiz.";
-        res.redirect('/login');
-    }
+
+
+
+
+
+app.post('/quizz', (req, res) => {
+    const { id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro } = req.body;
+
+    const query = `
+        INSERT INTO tb_questao_usuario (id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    con.query(query, [id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro], (err) => {
+        if (err) throw err;
+        res.redirect('/quizz?id_questao=' + id_questao);
+    });
 });
+
+app.get('/sair', (req, res) => {
+   
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Erro ao destruir a sessão:", err);
+            return res.redirect('/'); 
+        }
+        res.redirect('/'); 
+    });
+});
+
 
 app.listen(3000, function () {
     console.log("Servidor Escutando na porta 3000");
