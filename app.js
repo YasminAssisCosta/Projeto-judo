@@ -208,9 +208,11 @@ app.get('/quizzes', (req, res) => {
         }
     });
 });
- 
-
 app.get('/questoes', (req, res) => {
+    
+    if (!req.session.logado) {
+        return res.status(401).send('Você precisa estar logado para acessar essa página.');
+    }
     const id_questao = req.query.id_questao; 
 
     if (!id_questao) {
@@ -229,13 +231,14 @@ app.get('/questoes', (req, res) => {
     });
 });
 
+app.post('/questoes', (req, res) => {
+    
+    if (!req.session.logado) {
+        return res.status(401).send('Você precisa estar logado para enviar suas respostas.');
+    }
 
-
-
-
-
-app.post('/quizz', (req, res) => {
-    const { id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro } = req.body;
+    const id_usuario = req.session.id_usuario; // Pegar o id do usuário da sessão
+    const { id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro } = req.body;
 
     const query = `
         INSERT INTO tb_questao_usuario (id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro)
@@ -244,9 +247,37 @@ app.post('/quizz', (req, res) => {
 
     con.query(query, [id_usuario, id_questao, resposta_um, resposta_dois, resposta_tres, resposta_quatro], (err) => {
         if (err) throw err;
-        res.redirect('/quizz?id_questao=' + id_questao);
+        res.redirect('/inicio');
     });
 });
+
+
+app.get('/perfil', (req, res) => {
+    if (!req.session.logado) {
+        return res.status(401).send('Você precisa estar logado para enviar suas respostas.');
+    }
+
+    const userId = req.session.id_usuario; // Pegar o id do usuário da sessão
+
+  // Consulta as informações do usuário
+  const query = "SELECT * FROM tb_usuario WHERE id_usuario = ?"
+  con.query(query, [userId], (err, result) => {
+    if (err) throw err;
+
+  
+    con.query(`
+      SELECT q.id_questao, q.questao_Um, qu.resposta_um
+      FROM tb_questao_usuario qu
+      JOIN tb_questao q ON qu.id_questao = q.id_questao
+      WHERE qu.id_usuario = ?`, [userId], (err, quizResults) => {
+      if (err) throw err;
+
+      // Renderiza a view de perfil com as informações do usuário e quizzes
+      res.render('perfil', { user: userResults[0], quizzes: quizResults });
+    });
+  });
+});
+
 
 app.get('/sair', (req, res) => {
    
