@@ -49,13 +49,13 @@
                 <div class="card mb-3" style="max-width: 100%;">
                     <div class="row g-0">
                         <div class="col-md-2">
-                            <img src="<%= conteudo.imagem %>" class="img-fluid rounded-start" alt="Imagem do Conteúdo" >
+                            <img src="images/material.jpeg" class="img-fluid rounded-start" alt="Imagem do Conteúdo" >
                         </div>
                         <div class="col-md-10">
                             <div class="card-body">
                                 <h5 class="card-title"><%= conteudo.titulo %></h5>
                                 <p class="card-text"><%= conteudo.conteudo %></p>
-                                <a href="/verMaterial?id_conteudo=<%= conteudo.id_conteudo %>" class="btn btn-custom">
+                                <a href="/quizzes?id_conteudo=<%= conteudo.id_conteudo %>" class="btn btn-custom">
                                     Entrar
                                 </a>
                             </div>
@@ -65,7 +65,7 @@
             <% }); %>
         <% } else { %>
             <h1>Desculpe, ainda não há materiais cadastrados</h1>
-            <a href="/addConteudo" class="btn btn-outline no-content-btn">Adicionar conteúdo</a>
+            <a href="/addConteudo" class="btn btn-outline no-content-btn" style="background-color: #a32927; color:#ffffff">Adicionar conteúdo</a>
         <% } %>
     </div>
 

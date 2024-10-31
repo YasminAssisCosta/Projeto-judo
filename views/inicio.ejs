@@ -13,7 +13,6 @@
 
 <body>
 
- 
     <%- include('navbar') %>
     <%- include('vlibras') %>
     <h1 class="text-center" style="font-family: 'Patua One', sans-serif; margin-bottom: 40px; margin-top: 10px; font-size: 40px;">
@@ -32,10 +31,16 @@
                                 <%= faixa.cor %>
                             </h2>
                         </div>
-                        <div class="card-footer">
-                            <a href="/conteudo?faixa=<%= faixa.id_faixa %>" class="btn w-100" style="background-color: #a32927; color:#ffffff;">
-                                Entrar
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="/conteudo?faixa=<%= faixa.id_faixa %>" class="btn" style="background-color: #a32927; color: #ffffff; flex: 1; margin-right: 5px;">
+                                Estudar
                             </a>
+                            <a href="/questoes?id_faixa=<%= faixa.id_faixa %>" class="btn" style="background-color: #a32927; color: #ffffff; flex: 1; margin-left: 5px;">
+                                Quizz
+                            </a>
+                            
+                         
+                              
                         </div>
                     </div>
                 </div>

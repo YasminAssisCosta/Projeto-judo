@@ -133,21 +133,22 @@ app.post('/cadastro', function (req, res) {
 
 app.get('/verMaterial', (req, res) => {
     if (req.session.logado) {
-        const idConteudo = req.query.id_conteudo;
-        const query = "SELECT * FROM tb_conteudo WHERE id_conteudo = ?";
-        con.query(query, [idConteudo], (err, result) => {
+        const idTecnica = req.query.id_tecnica; // Mudamos para id_tecnica
+        const query = "SELECT * FROM tb_tecnica WHERE id_tecnica = ?";
+        con.query(query, [idTecnica], (err, result) => {
             if (err) throw err;
             if (result.length > 0) {
                 const conteudo = result[0];
                 res.render('verMaterial.ejs', { conteudo });
             } else {
-                res.send('Conteúdo não encontrado.');
+                res.send('Técnica não encontrada.');
             }
         });
     } else {
         res.render('login.ejs', { mensagem: "Realize login ou cadastre-se para ter acesso a essa página" });
     }
 });
+
 
 app.get('/addConteudo', (req, res) => {
     if (req.session.logado) {
@@ -175,20 +176,23 @@ app.post('/addConteudo', function (req, res) {
 
 app.get('/conteudo', (req, res) => {
     if (req.session.logado) {
-        const faixaId = req.query.faixa;
+        const faixaId = req.query.faixa; // ID da faixa deve ser passado na URL como parâmetro
         if (!faixaId) {
             return res.status(400).send('Faixa não especificada.');
         }
+
+        // Query apenas na tabela tb_conteudo
         const query = "SELECT * FROM tb_conteudo WHERE id_faixa = ?";
         con.query(query, [faixaId], (err, result) => {
             if (err) throw err;
+
+            // Renderiza a página de conteúdo com apenas os dados filtrados
             res.render('conteudo.ejs', { conteudos: result });
         });
     } else {
         res.render('login.ejs', { mensagem: "Realize login ou cadastre-se para ter acesso a essa página" });
     }
 });
-
 
 
 app.get('/quizzes', (req, res) => {
@@ -198,38 +202,42 @@ app.get('/quizzes', (req, res) => {
         return res.status(400).send('ID de conteúdo não especificado.');
     }
 
-    const query = "SELECT * FROM tb_questao WHERE id_conteudo = ?";
+    const query = "SELECT * FROM tb_tecnica WHERE id_conetudo = ?";
     con.query(query, [id_conteudo], (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
-            res.render('quizzes', { quizzes: result });
+            res.render('quizzes', { tecnicas: result }); // Envia `tecnicas` para a view `quizzes`
         } else {
-            res.send('Nenhum quiz encontrado para este conteúdo.');
+            res.send('Nenhuma técnica encontrada para este conteúdo.');
         }
     });
 });
 app.get('/questoes', (req, res) => {
-    
     if (!req.session.logado) {
         return res.status(401).send('Você precisa estar logado para acessar essa página.');
     }
-    const id_questao = req.query.id_questao; 
 
-    if (!id_questao) {
-        return res.status(400).send('ID de questão não especificado.');
+    const id_faixa = req.query.id_faixa; // Alterado para pegar o id_faixa da URL
+
+    if (!id_faixa) {
+        return res.status(400).send('ID da faixa não especificado.');
     }
 
-    const query = "SELECT * FROM tb_questao WHERE id_questao = ?";
-    con.query(query, [id_questao], (err, result) => {
+    // Consulta para buscar todas as questões associadas ao id_faixa
+    const query = "SELECT * FROM tb_questao WHERE id_faixa = ?"; 
+    con.query(query, [id_faixa], (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
-            // Acessar o primeiro item do array result
-            res.render('quizz.ejs', { quiz: result[0] });
+            // Passando todas as questões encontradas para a view
+            res.render('quizz.ejs', { quiz : result[0]}); 
         } else {
-            res.send('Nenhum quiz encontrado para este conteúdo.');
+            res.send('Nenhum quiz encontrado para esta faixa.');
         }
     });
 });
+
+
+
 
 app.post('/questoes', (req, res) => {
     
@@ -250,33 +258,41 @@ app.post('/questoes', (req, res) => {
         res.redirect('/inicio');
     });
 });
-
-
 app.get('/perfil', (req, res) => {
     if (!req.session.logado) {
-        return res.status(401).send('Você precisa estar logado para enviar suas respostas.');
+        return res.status(401).send('Você precisa estar logado para acessar essa página.');
     }
 
-    const userId = req.session.id_usuario; // Pegar o id do usuário da sessão
+    const userId = req.session.id_usuario;
 
-  // Consulta as informações do usuário
-  const query = "SELECT * FROM tb_usuario WHERE id_usuario = ?"
-  con.query(query, [userId], (err, result) => {
-    if (err) throw err;
+    const userQuery = "SELECT * FROM tb_usuario WHERE id_usuario = ?";
+    const questionsQuery = `
+SELECT q.id_questao, q.questao_Um, q.questao_Dois, q.questao_Tres, q.questao_Quatro,
+       q.op_correto_Um, q.op_correto_Dois, q.op_correto_Tres, q.op_correto_Quatro,
+       qu.resposta_um, qu.resposta_dois, qu.resposta_tres, qu.resposta_quatro,
+       f.cor AS faixa_cor
+FROM tb_questao_usuario qu
+JOIN tb_questao q ON qu.id_questao = q.id_questao
+JOIN tb_faixa f ON q.id_faixa = f.id_faixa
+WHERE qu.id_usuario = ?`;
 
-  
-    con.query(`
-      SELECT q.id_questao, q.questao_Um, qu.resposta_um
-      FROM tb_questao_usuario qu
-      JOIN tb_questao q ON qu.id_questao = q.id_questao
-      WHERE qu.id_usuario = ?`, [userId], (err, quizResults) => {
-      if (err) throw err;
+    con.query(userQuery, [userId], (err, userResult) => {
+        if (err) throw err;
+        
+        con.query(questionsQuery, [userId], (err, quizResults) => {
+            if (err) throw err;
 
-      // Renderiza a view de perfil com as informações do usuário e quizzes
-      res.render('perfil', { user: userResults[0], quizzes: quizResults });
+            // Verificação de dados retornados para depuração (opcional)
+            console.log("Quiz Results:", quizResults);
+
+            res.render('perfil', { user: userResult[0], quizzes: quizResults });
+        });
     });
-  });
 });
+
+
+
+
 
 
 app.get('/sair', (req, res) => {
@@ -294,3 +310,4 @@ app.get('/sair', (req, res) => {
 app.listen(3000, function () {
     console.log("Servidor Escutando na porta 3000");
 });
+
