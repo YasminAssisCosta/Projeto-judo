@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnicas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            height: 400px; /* Altura fixa para os cards */
+        }
+        .btn-vermelho {
+            background-color: #a32927; /* Cor vermelha */
+            color: #ffffff; /* Cor do texto em branco */
+            width: 95%; /* Largura do botão */
+            margin: auto; /* Centraliza o botão */
+        }
+        .btn-vermelho:hover {
+            background-color: #8b1e23; /* Cor mais escura ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+    <%- include('navbar') %>
+    <%- include('vlibras') %>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Técnicas de Disponíveis</h1>
+        <div class="row">
+            <% tecnicas.forEach(function(tecnica, index) { %>
+                <div class="col-md-4 mb-3" style="width:320px;">
+                    <div class="card">
+                        <img src="https://i.pinimg.com/564x/54/41/49/544149695493a02c7ff59aa73053d3d9.jpg" class="card-img-top" alt="<%= tecnica.tecnica %>" style="height: 250px; width:100%; object-fit: cover;">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title"><%= tecnica.tecnica %></h5>
+                            
+                            <a href="/verMaterial?id_tecnica=<%= tecnica.id_tecnica %>" class="btn btn-vermelho">Ver Vídeo</a>
+
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>
